@@ -14,6 +14,7 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
   final tasaCtrl = TextEditingController();
   final montoCtrl = TextEditingController();
   final periodosCtrl = TextEditingController();
+  final interesCtrl = TextEditingController();
 
   String calcular = 'Monto Futuro';
   String unidad = 'meses';
@@ -51,6 +52,7 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
     final iPct = double.tryParse(tasaCtrl.text) ?? 0.0;
     final M = double.tryParse(montoCtrl.text) ?? 0.0;
     final n = double.tryParse(periodosCtrl.text) ?? 0.0;
+    final interes = double.tryParse(interesCtrl.text) ?? 0.0;
 
     final i = iPct / 100;
 
@@ -75,6 +77,26 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
           resultado =
               'Tiempo necesario (n): ${tiempo.toStringAsFixed(2)} $unidad';
         }
+        break;
+
+      case 'TiempoInteres':
+        //if (C > 0 && i > 0) {
+        final tiempo = interes / (C * i);
+        resultado = 'Tiempo necesario (n): ${tiempo.toStringAsFixed(2)} Años';
+        //}
+        break;
+
+      case 'CapitalInteresTotal':
+        //if (C > 0 && i > 0) {
+        final capital = interes / (i * n);
+        resultado = 'Capital necesario (C): ${capital.toStringAsFixed(2)} COP';
+        //}
+        break;
+      case 'CapitalInvertido':
+        //if (C > 0 && i > 0) {
+        final capital = M / (1 + i * n);
+        resultado = 'Capital necesario (C): ${capital.toStringAsFixed(2)} COP';
+        //}
         break;
     }
     setState(() {}); // 👉 refresca tanto resultado como ejemplo
@@ -110,6 +132,36 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
             _input(montoCtrl, 'Monto Futuro (M)'),
             const SizedBox(height: 12),
             _input(tasaCtrl, 'Tasa i (%) por periodo'),
+          ],
+        );
+      case 'TiempoInteres':
+        return Column(
+          children: [
+            _input(interesCtrl, 'Interes (I)'),
+            const SizedBox(height: 12),
+            _input(capitalCtrl, 'Capital (C)'),
+            const SizedBox(height: 12),
+            _input(tasaCtrl, 'Tasa i (%) por periodo'),
+          ],
+        );
+      case 'CapitalInteresTotal':
+        return Column(
+          children: [
+            _input(interesCtrl, 'Interes (I)'),
+            const SizedBox(height: 12),
+            _input(tasaCtrl, 'Tasa i (%) por periodo'),
+            const SizedBox(height: 12),
+            _input(periodosCtrl, 'Número de periodos (n)'),
+          ],
+        );
+      case 'CapitalInvertido':
+        return Column(
+          children: [
+            _input(montoCtrl, 'Capital (C)'),
+            const SizedBox(height: 12),
+            _input(tasaCtrl, 'Tasa i (%) por periodo'),
+            const SizedBox(height: 12),
+            _input(periodosCtrl, 'Número de periodos (n)'),
           ],
         );
       default:
@@ -161,7 +213,17 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
               DropdownMenuItem(
                   value: 'Tasa de Interés',
                   child: Text('Calcular Tasa de Interés')),
-              DropdownMenuItem(value: 'Tiempo', child: Text('Calcular Tiempo')),
+              DropdownMenuItem(
+                  value: 'Tiempo', child: Text('Calcular Tiempo (Capital)')),
+              DropdownMenuItem(
+                  value: 'TiempoInteres',
+                  child: Text('Calcular Tiempo (Interes)')),
+              DropdownMenuItem(
+                  value: 'CapitalInteresTotal',
+                  child: Text('Calcular Capital (Interes Total)')),
+              DropdownMenuItem(
+                  value: 'CapitalInvertido',
+                  child: Text('Calcular Capital Invertido (Monto)')),
             ],
             onChanged: (v) => setState(() {
               calcular = v ?? 'Monto Futuro';
