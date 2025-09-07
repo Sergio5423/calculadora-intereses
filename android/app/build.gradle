@@ -1,0 +1,66 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"  // Para Firebase
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader -> 
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+if (flutterVersionCode == null) {
+    flutterVersionCode = "1"
+}
+
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
+if (flutterVersionName == null) {
+    flutterVersionName = "1.0"
+}
+
+android {
+    namespace = "com.example.auth_2024"
+    compileSdk = 35  // SDK 35
+
+    // Agrega esto para unificar el target JVM
+    kotlin {
+        jvmToolchain(17)
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    defaultConfig {
+        applicationId = "com.example.auth_2024"
+        minSdkVersion 23  // minSdkVersion configurado a 23
+        targetSdkVersion 35 // ← Actualiza aquí
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+    }
+
+    buildTypes {
+        release {
+            shrinkResources false
+            minifyEnabled false  // Desactivado para evitar optimizaciones en desarrollo
+            signingConfig signingConfigs.debug  // Puedes cambiar esto para la versión release final
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.0"
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')  // Para Firebase (verifica que coincida con tu proyecto)
+    implementation 'com.google.firebase:firebase-analytics'  // Firebase Analytics (puedes añadir más dependencias según las necesidades de Firebase)
+}
+

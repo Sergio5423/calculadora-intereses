@@ -1,0 +1,60 @@
+name: auth_2024
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.2.1
+  fluttertoast: ^8.2.4
+  cupertino_icons: ^1.0.6
+  firebase_auth:
+  firebase_core:
+  cloud_firestore:
+  firebase_storage:
+  get:
+  get_storage:
+  image_picker:
+  file_picker:
+  intl:
+  uuid: 
+  path_provider:
+  file:
+  permission_handler: ^11.3.0
+  logger: ^1.1.0
+  provider: ^6.0.0
+  url_launcher: ^6.0.20
+  image: ^3.0.1
+  qr_flutter: ^4.1.0
+  flutter_credit_card: ^4.0.1
+  salomon_bottom_bar: ^3.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.9.2
+  flutter_lints: ^3.0.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_icon.png" # Ruta de tu ícono en la carpeta assets
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/profile_placeholder.png
+    - assets/app_icon.png # Logo para icono de aplicacion
+    - assets/fondo_login.png
+    - assets/fondo_pin.png
+    - assets/home_page.png
+    - assets/register_and_login.png
+    - assets/welcome.png
+  # Agrega más assets si lo necesitas

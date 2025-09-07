@@ -1,0 +1,40 @@
+// build.gradle a nivel de proyecto
+
+buildscript {
+    ext.kotlin_version = '2.0.0'  // Update this to the version you want to use
+    repositories {
+        google()  // Asegúrate de tener el repositorio de Google
+        mavenCentral()
+    }
+    dependencies {
+        // Añadir la dependencia para Google Services
+        classpath 'com.google.gms:google-services:4.3.14'  // Para Firebase
+
+        // Actualiza el plugin de Gradle a la versión compatible con SDK 34
+        classpath 'com.android.tools.build:gradle:8.1.0' // ← Versión recomendada
+        
+        // Añadir el plugin de Kotlin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"  // Plugin de Kotlin
+    }
+}
+
+allprojects { 
+    repositories {
+        google()  // Repositorio de Google
+        mavenCentral()  // Repositorio central de Maven
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+
+
