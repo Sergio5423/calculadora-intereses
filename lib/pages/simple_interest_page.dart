@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 
 class SimpleInterestPage extends StatefulWidget {
   const SimpleInterestPage({super.key});
@@ -71,7 +72,8 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
       case 'Tiempo':
         if (C > 0 && i > 0) {
           final tiempo = (M - C) / (C * i);
-          resultado = 'Tiempo necesario (n): ${tiempo.toStringAsFixed(2)} $unidad';
+          resultado =
+              'Tiempo necesario (n): ${tiempo.toStringAsFixed(2)} $unidad';
         }
         break;
     }
@@ -123,6 +125,10 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       keyboardType: TextInputType.number,
+      inputFormatters: [
+        // Bloquea las comas
+        FilteringTextInputFormatter.deny(RegExp(',')),
+      ],
     );
   }
 
@@ -146,29 +152,32 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.green.shade800)),
           const SizedBox(height: 16),
-
           DropdownButtonFormField<String>(
             value: calcular,
             items: const [
-              DropdownMenuItem(value: 'Monto Futuro', child: Text('Calcular Monto Futuro')),
-              DropdownMenuItem(value: 'Tasa de Interés', child: Text('Calcular Tasa de Interés')),
+              DropdownMenuItem(
+                  value: 'Monto Futuro',
+                  child: Text('Calcular Monto Futuro o Interés')),
+              DropdownMenuItem(
+                  value: 'Tasa de Interés',
+                  child: Text('Calcular Tasa de Interés')),
               DropdownMenuItem(value: 'Tiempo', child: Text('Calcular Tiempo')),
             ],
             onChanged: (v) => setState(() {
               calcular = v ?? 'Monto Futuro';
               resultado = '';
-              _cargarEjemplo(calcular); // 👉 actualiza el ejemplo automáticamente
+              _cargarEjemplo(
+                  calcular); // 👉 actualiza el ejemplo automáticamente
               capitalCtrl.clear();
               tasaCtrl.clear();
               montoCtrl.clear();
               periodosCtrl.clear();
             }),
-            decoration: const InputDecoration(labelText: '¿Qué deseas calcular?'),
+            decoration:
+                const InputDecoration(labelText: '¿Qué deseas calcular?'),
           ),
-
           const SizedBox(height: 20),
           _buildCampos(),
-
           const SizedBox(height: 20),
           FilledButton.icon(
             onPressed: _calcular,
@@ -176,7 +185,6 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
             label: Text("Calcular",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
           ),
-
           const SizedBox(height: 20),
           if (resultado.isNotEmpty)
             Container(
@@ -193,7 +201,6 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
                     color: Colors.green.shade900),
               ),
             ),
-
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(12),
@@ -212,4 +219,3 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
     );
   }
 }
-
