@@ -75,7 +75,8 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
       case 'Monto Futuro':
         if (C <= 0 || iPct <= 0 || n <= 0) {
           setState(() {
-            resultado = "Por favor ingresa Capital, Tasa y Número de periodos válidos.";
+            resultado =
+                "Por favor ingresa Capital, Tasa y Número de periodos válidos.";
           });
           return;
         }
@@ -91,7 +92,8 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
       case 'Tasa de Interés':
         if (C <= 0 || M <= 0 || n <= 0) {
           setState(() {
-            resultado = "Por favor ingresa Capital, Monto Futuro y Número de periodos válidos.";
+            resultado =
+                "Por favor ingresa Capital, Monto Futuro y Número de periodos válidos.";
           });
           return;
         }
@@ -105,7 +107,8 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
       case 'Tiempo':
         if (C <= 0 || iPct <= 0 || M <= 0) {
           setState(() {
-            resultado = "Por favor ingresa Capital, Tasa y Monto Futuro válidos.";
+            resultado =
+                "Por favor ingresa Capital, Tasa y Monto Futuro válidos.";
           });
           return;
         }
@@ -116,6 +119,13 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
         ejemplo =
             'Ejemplo: Si inviertes \$1,000,000 COP al 2% mensual y deseas llegar a \$1,268,241 COP,\n'
             'necesitarás alrededor de 12 meses.';
+        break;
+      case 'Capital':
+        final i = _convertirTasa(iPct, unidadTasa, unidadTiempo);
+        final capital = M / pow((1 + i), n);
+        resultado = 'Capital (C): ${capital.toStringAsFixed(2)} COP';
+        ejemplo = ''
+            '';
         break;
     }
 
@@ -149,9 +159,11 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
               DropdownMenuItem(
                   value: 'Monto Futuro', child: Text('Calcular Monto Futuro')),
               DropdownMenuItem(
-                  value: 'Tasa de Interés', child: Text('Calcular Tasa de Interés')),
+                  value: 'Tasa de Interés',
+                  child: Text('Calcular Tasa de Interés')),
+              DropdownMenuItem(value: 'Tiempo', child: Text('Calcular Tiempo')),
               DropdownMenuItem(
-                  value: 'Tiempo', child: Text('Calcular Tiempo')),
+                  value: 'Capital', child: Text('Calcular Capital')),
             ],
             onChanged: (v) {
               setState(() {
@@ -177,7 +189,8 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
                 }
               });
             },
-            decoration: const InputDecoration(labelText: '¿Qué deseas calcular?'),
+            decoration:
+                const InputDecoration(labelText: '¿Qué deseas calcular?'),
           ),
           const SizedBox(height: 20),
 
@@ -196,6 +209,11 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
             _input(montoCtrl, 'Monto Futuro (M)'),
           const SizedBox(height: 12),
 
+          if (calcular == 'Capital') const SizedBox(height: 12),
+          _input(montoCtrl, 'Monto Compuesto (MC)'),
+          const SizedBox(height: 12),
+          _input(tasaCtrl, 'Tasa i (%)'),
+          const SizedBox(height: 12),
           if (calcular != 'Tiempo')
             Row(
               children: [
@@ -208,12 +226,16 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
                     value: unidadTiempo,
                     items: const [
                       DropdownMenuItem(value: 'meses', child: Text('Meses')),
-                      DropdownMenuItem(value: 'trimestres', child: Text('Trimestres')),
-                      DropdownMenuItem(value: 'semestres', child: Text('Semestres')),
+                      DropdownMenuItem(
+                          value: 'trimestres', child: Text('Trimestres')),
+                      DropdownMenuItem(
+                          value: 'semestres', child: Text('Semestres')),
                       DropdownMenuItem(value: 'años', child: Text('Años')),
                     ],
-                    onChanged: (v) => setState(() => unidadTiempo = v ?? 'meses'),
-                    decoration: const InputDecoration(labelText: 'Unidad de tiempo'),
+                    onChanged: (v) =>
+                        setState(() => unidadTiempo = v ?? 'meses'),
+                    decoration:
+                        const InputDecoration(labelText: 'Unidad de tiempo'),
                   ),
                 ),
               ],
@@ -226,8 +248,10 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
             value: unidadTasa,
             items: const [
               DropdownMenuItem(value: 'mensual', child: Text('Tasa mensual')),
-              DropdownMenuItem(value: 'trimestral', child: Text('Tasa trimestral')),
-              DropdownMenuItem(value: 'semestral', child: Text('Tasa semestral')),
+              DropdownMenuItem(
+                  value: 'trimestral', child: Text('Tasa trimestral')),
+              DropdownMenuItem(
+                  value: 'semestral', child: Text('Tasa semestral')),
               DropdownMenuItem(value: 'anual', child: Text('Tasa anual')),
             ],
             onChanged: (v) => setState(() => unidadTasa = v ?? 'mensual'),
