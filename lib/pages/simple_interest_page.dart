@@ -44,6 +44,21 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
             'Ejemplo: Para que \$1,000,000 COP se conviertan en \$1,120,000 COP\n'
             'a una tasa del 2% mensual, se requieren 6 meses.';
         break;
+      case 'TiempoInteres':
+        ejemplo =
+            'Ejemplo: Un capital de \$70,000 tardará en generar unos intereses de \$105,000'
+            ' a una tasa del 15% anual, unos 10 años.';
+        break;
+      case 'CapitalInteresTotal':
+        ejemplo =
+            'Ejemplo: Si necesitas pagar \$500 de interés, a una tasa del 5% y el prestamo'
+            ' dura 3 años entonces el monto del préstamo es de \$3,333.33 COP.';
+        break;
+      case 'CapitalInvertido':
+        ejemplo =
+            'Ejemplo: Para tener un monto final de \$4000 en 3 años a una tasa del 7%'
+            'debes invertir \$3,305.79';
+        break;
     }
   }
 
@@ -89,7 +104,7 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
       case 'CapitalInteresTotal':
         //if (C > 0 && i > 0) {
         final capital = interes / (i * n);
-        resultado = 'Capital necesario (C): ${capital.toStringAsFixed(2)} COP';
+        resultado = 'Monto del préstamo (C): ${capital.toStringAsFixed(2)} COP';
         //}
         break;
       case 'CapitalInvertido':
@@ -214,13 +229,14 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
                   value: 'Tasa de Interés',
                   child: Text('Calcular Tasa de Interés')),
               DropdownMenuItem(
-                  value: 'Tiempo', child: Text('Calcular Tiempo (Capital)')),
+                  value: 'Tiempo',
+                  child: Text('Calcular Tiempo (Monto Futuro)')),
               DropdownMenuItem(
                   value: 'TiempoInteres',
                   child: Text('Calcular Tiempo (Interes)')),
               DropdownMenuItem(
                   value: 'CapitalInteresTotal',
-                  child: Text('Calcular Capital (Interes Total)')),
+                  child: Text('Calcular Capital (Interés Total)')),
               DropdownMenuItem(
                   value: 'CapitalInvertido',
                   child: Text('Calcular Capital Invertido (Monto)')),
