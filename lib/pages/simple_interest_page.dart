@@ -24,7 +24,7 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
   @override
   void initState() {
     super.initState();
-    _cargarEjemplo(calcular); // 👉 ejemplo por defecto al abrir la página
+    _cargarEjemplo(calcular);
   }
 
   void _cargarEjemplo(String tipo) {
@@ -46,18 +46,24 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
         break;
       case 'TiempoInteres':
         ejemplo =
-            'Ejemplo: Un capital de \$70,000 tardará en generar unos intereses de \$105,000'
-            ' a una tasa del 15% anual, unos 10 años.';
+            'Ejemplo: Un capital de \$70,000 tardará en generar unos intereses de \$105,000\n'
+            'a una tasa del 15% anual, unos 10 años.';
         break;
       case 'CapitalInteresTotal':
         ejemplo =
-            'Ejemplo: Si necesitas pagar \$500 de interés, a una tasa del 5% y el prestamo'
-            ' dura 3 años entonces el monto del préstamo es de \$3,333.33 COP.';
+            'Ejemplo: Si necesitas pagar \$500 de interés, a una tasa del 5% y el préstamo\n'
+            'dura 3 años entonces el monto del préstamo es de \$3,333.33 COP.';
         break;
       case 'CapitalInvertido':
         ejemplo =
-            'Ejemplo: Para tener un monto final de \$4000 en 3 años a una tasa del 7%'
-            'debes invertir \$3,305.79';
+            'Ejemplo: Para tener un monto final de \$4000 en 3 años a una tasa del 7%\n'
+            'debes invertir \$3,305.79.';
+        break;
+      case 'Interés simple (básico)':
+        ejemplo = 'Ejemplo: P = 6000, r = 4.8% anual, t = 2.5 años\n'
+            'Interés = 6000 × 0.048 × 2.5 = 720\n'
+            'Monto = 6000 + 720 = 6720\n'
+            'Si retiras 3/4 → 5040.';
         break;
     }
   }
@@ -95,26 +101,32 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
         break;
 
       case 'TiempoInteres':
-        //if (C > 0 && i > 0) {
         final tiempo = interes / (C * i);
         resultado = 'Tiempo necesario (n): ${tiempo.toStringAsFixed(2)} Años';
-        //}
         break;
 
       case 'CapitalInteresTotal':
-        //if (C > 0 && i > 0) {
         final capital = interes / (i * n);
         resultado = 'Monto del préstamo (C): ${capital.toStringAsFixed(2)} COP';
-        //}
         break;
+
       case 'CapitalInvertido':
-        //if (C > 0 && i > 0) {
         final capital = M / (1 + i * n);
         resultado = 'Capital necesario (C): ${capital.toStringAsFixed(2)} COP';
-        //}
+        break;
+
+      case 'Interés simple (básico)':
+        if (C > 0 && i > 0 && n > 0) {
+          final I = C * i * n;
+          final MF = C + I;
+          final retiro = MF * 0.75;
+          resultado = 'Interés generado: \$${I.toStringAsFixed(2)}\n'
+              'Monto acumulado: \$${MF.toStringAsFixed(2)}\n'
+              'Retiro (3/4): \$${retiro.toStringAsFixed(2)}';
+        }
         break;
     }
-    setState(() {}); // 👉 refresca tanto resultado como ejemplo
+    setState(() {});
   }
 
   Widget _buildCampos() {
@@ -172,11 +184,21 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
       case 'CapitalInvertido':
         return Column(
           children: [
-            _input(montoCtrl, 'Capital (C)'),
+            _input(montoCtrl, 'Monto Futuro (M)'),
             const SizedBox(height: 12),
             _input(tasaCtrl, 'Tasa i (%) por periodo'),
             const SizedBox(height: 12),
             _input(periodosCtrl, 'Número de periodos (n)'),
+          ],
+        );
+      case 'Interés simple (básico)':
+        return Column(
+          children: [
+            _input(capitalCtrl, 'Capital (P)'),
+            const SizedBox(height: 12),
+            _input(tasaCtrl, 'Tasa de interés anual (j%)'),
+            const SizedBox(height: 12),
+            _input(periodosCtrl, 'Tiempo (años)'),
           ],
         );
       default:
@@ -193,7 +215,6 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
-        // Bloquea las comas
         FilteringTextInputFormatter.deny(RegExp(',')),
       ],
     );
@@ -201,9 +222,6 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
 
   @override
   Widget build(BuildContext context) {
-    final titleStyle =
-        GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Interés Simple',
@@ -240,16 +258,19 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
               DropdownMenuItem(
                   value: 'CapitalInvertido',
                   child: Text('Calcular Capital Invertido (Monto)')),
+              DropdownMenuItem(
+                  value: 'Interés simple (básico)',
+                  child: Text('Cálculo básico de interés simple')),
             ],
             onChanged: (v) => setState(() {
               calcular = v ?? 'Monto Futuro';
               resultado = '';
-              _cargarEjemplo(
-                  calcular); // 👉 actualiza el ejemplo automáticamente
+              _cargarEjemplo(calcular);
               capitalCtrl.clear();
               tasaCtrl.clear();
               montoCtrl.clear();
               periodosCtrl.clear();
+              interesCtrl.clear();
             }),
             decoration:
                 const InputDecoration(labelText: '¿Qué deseas calcular?'),
