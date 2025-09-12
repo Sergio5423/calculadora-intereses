@@ -43,8 +43,7 @@ class _AnnuityPageState extends State<AnnuityPage> {
             'Resultado ≈ \$3,509,850 COP.';
         break;
       case 'Cuota periódica (R)':
-        ejemplo =
-            'Ejemplo con VF: Si VF=4,446,200 COP, i=3% y n=8:\n'
+        ejemplo = 'Ejemplo con VF: Si VF=4,446,200 COP, i=3% y n=8:\n'
             'R = VF * i / [ (1+i)^n - 1 ]\n'
             'Resultado ≈ \$500,000 COP.\n\n'
             'Ejemplo con VP: Si VP=3,509,850 COP, i=3% y n=8:\n'
@@ -52,8 +51,7 @@ class _AnnuityPageState extends State<AnnuityPage> {
             'Resultado ≈ \$500,000 COP.';
         break;
       case 'Número de periodos (n)':
-        ejemplo =
-            'Ejemplo con VF: Si R=500,000 COP, VF=4,446,200 COP, i=3%:\n'
+        ejemplo = 'Ejemplo con VF: Si R=500,000 COP, VF=4,446,168 COP, i=3%:\n'
             'n = ln(1 + (VF*i)/R) / ln(1+i)\n'
             'Resultado ≈ 8 periodos.\n\n'
             'Ejemplo con VP: Si R=500,000 COP, VP=3,509,850 COP, i=3%:\n'
@@ -174,22 +172,31 @@ class _AnnuityPageState extends State<AnnuityPage> {
           DropdownButtonFormField<String>(
             value: calcular,
             items: const [
-              DropdownMenuItem(value: 'Valor Futuro', child: Text('Calcular Valor Futuro')),
-              DropdownMenuItem(value: 'Valor Presente', child: Text('Calcular Valor Presente')),
-              DropdownMenuItem(value: 'Cuota periódica (R)', child: Text('Despejar cuota periódica (R)')),
-              DropdownMenuItem(value: 'Número de periodos (n)', child: Text('Despejar número de periodos (n)')),
+              DropdownMenuItem(
+                  value: 'Valor Futuro', child: Text('Calcular Valor Futuro')),
+              DropdownMenuItem(
+                  value: 'Valor Presente',
+                  child: Text('Calcular Valor Presente')),
+              DropdownMenuItem(
+                  value: 'Cuota periódica (R)',
+                  child: Text('Despejar cuota periódica (R)')),
+              DropdownMenuItem(
+                  value: 'Número de periodos (n)',
+                  child: Text('Despejar número de periodos (n)')),
             ],
             onChanged: (v) {
               setState(() {
                 calcular = v ?? 'Valor Futuro';
                 _limpiarCampos();
                 _cargarEjemplo(calcular);
-                if (calcular == 'Cuota periódica (R)' || calcular == 'Número de periodos (n)') {
+                if (calcular == 'Cuota periódica (R)' ||
+                    calcular == 'Número de periodos (n)') {
                   computeFrom = 'Desde VF';
                 }
               });
             },
-            decoration: const InputDecoration(labelText: '¿Qué deseas calcular?'),
+            decoration:
+                const InputDecoration(labelText: '¿Qué deseas calcular?'),
           ),
           const SizedBox(height: 20),
 
@@ -201,12 +208,16 @@ class _AnnuityPageState extends State<AnnuityPage> {
             _input(periodosCtrl, 'Número de periodos (n)', hint: 'Ej: 8'),
           ],
 
-          if (calcular == 'Cuota periódica (R)' || calcular == 'Número de periodos (n)') ...[
+          if (calcular == 'Cuota periódica (R)' ||
+              calcular == 'Número de periodos (n)') ...[
             DropdownButtonFormField<String>(
               value: computeFrom,
               items: const [
-                DropdownMenuItem(value: 'Desde VF', child: Text('Desde VF (Valor Futuro)')),
-                DropdownMenuItem(value: 'Desde VP', child: Text('Desde VP (Valor Presente)')),
+                DropdownMenuItem(
+                    value: 'Desde VF', child: Text('Desde VF (Valor Futuro)')),
+                DropdownMenuItem(
+                    value: 'Desde VP',
+                    child: Text('Desde VP (Valor Presente)')),
               ],
               onChanged: (v) {
                 setState(() {
@@ -214,11 +225,14 @@ class _AnnuityPageState extends State<AnnuityPage> {
                   _limpiarCampos();
                 });
               },
-              decoration: const InputDecoration(labelText: 'Conocer a partir de'),
+              decoration:
+                  const InputDecoration(labelText: 'Conocer a partir de'),
             ),
             const SizedBox(height: 12),
-            if (computeFrom == 'Desde VF') _input(vfCtrl, 'Valor Futuro (VF)', hint: 'Ej: 4446200'),
-            if (computeFrom == 'Desde VP') _input(vpCtrl, 'Valor Presente (VP)', hint: 'Ej: 3509850'),
+            if (computeFrom == 'Desde VF')
+              _input(vfCtrl, 'Valor Futuro (VF)', hint: 'Ej: 4446200'),
+            if (computeFrom == 'Desde VP')
+              _input(vpCtrl, 'Valor Presente (VP)', hint: 'Ej: 3509850'),
             const SizedBox(height: 12),
             if (calcular == 'Cuota periódica (R)')
               _input(periodosCtrl, 'Número de periodos (n)', hint: 'Ej: 8'),
@@ -232,7 +246,8 @@ class _AnnuityPageState extends State<AnnuityPage> {
           FilledButton.icon(
             onPressed: _calcular,
             icon: const Icon(Icons.calculate),
-            label: Text("Calcular", style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+            label: Text("Calcular",
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
           ),
 
           const SizedBox(height: 20),
@@ -246,7 +261,9 @@ class _AnnuityPageState extends State<AnnuityPage> {
               child: Text(
                 resultado,
                 style: GoogleFonts.poppins(
-                    fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green.shade900), // ✅ Verde
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green.shade900), // ✅ Verde
               ),
             ),
 
