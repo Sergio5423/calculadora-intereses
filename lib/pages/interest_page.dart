@@ -10,10 +10,8 @@ class InterestPage extends StatefulWidget {
 }
 
 class _InterestPageState extends State<InterestPage> {
-  final TextEditingController capitalController = TextEditingController(); // P
   final TextEditingController nominalController = TextEditingController(); // j
-  final TextEditingController periodsController =
-      TextEditingController(); // m o t
+  final TextEditingController periodsController = TextEditingController(); // m
   final TextEditingController periodRateController =
       TextEditingController(); // i (%)
 
@@ -34,7 +32,6 @@ class _InterestPageState extends State<InterestPage> {
 
   @override
   void dispose() {
-    capitalController.dispose();
     nominalController.dispose();
     periodsController.dispose();
     periodRateController.dispose();
@@ -63,20 +60,11 @@ class _InterestPageState extends State<InterestPage> {
             "→ EA ≈ 26.82%.\n"
             "Si inviertes \$1.000.000 durante un año, terminarías con ≈ \$1.268.241 COP.";
         break;
-
-      case "Interés simple":
-        ejemplo = "Ejemplo:\n"
-            "P = 6000, r = 4.8% anual, t = 2.5 años\n"
-            "Interés = 6000 × 0.048 × 2.5 = \$720\n"
-            "Monto = 6000 + 720 = \$6720\n"
-            "Si retiras 3/4 → \$5040.";
-        break;
     }
     setState(() {});
   }
 
   void _calcular() {
-    final P = double.tryParse(capitalController.text.replaceAll(',', '.')) ?? 0;
     final j = double.tryParse(nominalController.text.replaceAll(',', '.')) ?? 0;
     final m = double.tryParse(periodsController.text.replaceAll(',', '.')) ?? 0;
     final iPct =
@@ -87,7 +75,7 @@ class _InterestPageState extends State<InterestPage> {
     tasaEA = null;
     resultado = "";
 
-    if (m <= 0 && calcular != "Interés simple") {
+    if (m <= 0) {
       setState(() {
         resultado = "Por favor ingresa un número de capitalizaciones válido.";
       });
@@ -123,18 +111,6 @@ class _InterestPageState extends State<InterestPage> {
           tasaJ = j;
           tasaEA = ea.toDouble();
           resultado = "Tasa Efectiva Anual (EA): ${ea.toStringAsFixed(2)} %";
-        }
-        break;
-
-      case "Interés simple":
-        if (P > 0 && j > 0 && m > 0) {
-          final r = j / 100;
-          final interes = P * r * m;
-          final monto = P + interes;
-          final retiro = monto * 0.75;
-          resultado = "Interés generado: \$${interes.toStringAsFixed(2)}\n"
-              "Monto acumulado: \$${monto.toStringAsFixed(2)}\n"
-              "Retiro (3/4): \$${retiro.toStringAsFixed(2)}";
         }
         break;
     }
@@ -225,9 +201,6 @@ class _InterestPageState extends State<InterestPage> {
               DropdownMenuItem(
                   value: "Tasa Efectiva Anual (EA)",
                   child: Text("Calcular EA (efectiva anual)")),
-              DropdownMenuItem(
-                  value: "Interés simple",
-                  child: Text("Calcular interés simple")),
             ],
             onChanged: (v) {
               setState(() {
@@ -243,25 +216,12 @@ class _InterestPageState extends State<InterestPage> {
                 const InputDecoration(labelText: "¿Qué deseas calcular?"),
           ),
           const SizedBox(height: 20),
-          if (calcular == "Interés simple") ...[
-            TextField(
-              controller: capitalController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Capital (P)",
-                hintText: "Ej: 6000",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
-            const SizedBox(height: 12),
-          ],
           TextField(
             controller: nominalController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              labelText: "Tasa de interés (j%)",
-              hintText: "Ej: 4.8",
+              labelText: "Tasa nominal anual (j%)",
+              hintText: "Ej: 24",
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
@@ -271,10 +231,8 @@ class _InterestPageState extends State<InterestPage> {
             controller: periodsController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              labelText: calcular == "Interés simple"
-                  ? "Tiempo (años)"
-                  : "Capitalizaciones por año (m)",
-              hintText: calcular == "Interés simple" ? "Ej: 2.5" : "Ej: 12",
+              labelText: "Capitalizaciones por año (m)",
+              hintText: "Ej: 12",
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
