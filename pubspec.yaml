@@ -26,7 +26,7 @@ dependencies:
   uuid: 
   path_provider:
   file:
-  permission_handler: ^11.3.0
+  permission_handler: ^11.3.1
   logger: ^1.1.0
   provider: ^6.0.0
   url_launcher: ^6.0.20
@@ -57,4 +57,9 @@ flutter:
     - assets/home_page.png
     - assets/register_and_login.png
     - assets/welcome.png
+    - assets/grad_arit_va.png
+    - assets/grad_geo_va.png
+    - assets/grad_arit_vf.png
+    - assets/grad_geo_vf.png
+    - assets/grad_geo_vf2.png
   # Agrega más assets si lo necesitas

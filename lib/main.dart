@@ -52,9 +52,10 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/login', page: () => LoginPage()),
         GetPage(name: '/register', page: () => RegisterPage()),
-        GetPage(
-            name: '/home', page: () => const HomePage()), // 👈 Ruta agregada
+        GetPage(name: '/home', page: () => const HomePage()), // 👈 Ruta agregada
       ],
     );
   }
 }
+
+

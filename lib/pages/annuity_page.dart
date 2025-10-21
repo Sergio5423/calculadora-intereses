@@ -21,11 +21,13 @@ class _AnnuityPageState extends State<AnnuityPage> {
   String resultado = '';
   String ejemplo = '';
   String computeFrom = 'Desde VF';
+  String teoriaYFormula = ''; // Nueva variable para teoría y fórmulas
 
   @override
   void initState() {
     super.initState();
     _cargarEjemplo(calcular);
+    _cargarTeoriaYFormula(calcular); // 👉 teoría y fórmula por defecto
   }
 
   void _cargarEjemplo(String tipo) {
@@ -43,7 +45,8 @@ class _AnnuityPageState extends State<AnnuityPage> {
             'Resultado ≈ \$3,509,850 COP.';
         break;
       case 'Cuota periódica (R)':
-        ejemplo = 'Ejemplo con VF: Si VF=4,446,200 COP, i=3% y n=8:\n'
+        ejemplo =
+            'Ejemplo con VF: Si VF=4,446,200 COP, i=3% y n=8:\n'
             'R = VF * i / [ (1+i)^n - 1 ]\n'
             'Resultado ≈ \$500,000 COP.\n\n'
             'Ejemplo con VP: Si VP=3,509,850 COP, i=3% y n=8:\n'
@@ -51,7 +54,8 @@ class _AnnuityPageState extends State<AnnuityPage> {
             'Resultado ≈ \$500,000 COP.';
         break;
       case 'Número de periodos (n)':
-        ejemplo = 'Ejemplo con VF: Si R=500,000 COP, VF=4,446,168 COP, i=3%:\n'
+        ejemplo =
+            'Ejemplo con VF: Si R=500,000 COP, VF=4,446,200 COP, i=3%:\n'
             'n = ln(1 + (VF*i)/R) / ln(1+i)\n'
             'Resultado ≈ 8 periodos.\n\n'
             'Ejemplo con VP: Si R=500,000 COP, VP=3,509,850 COP, i=3%:\n'
@@ -60,6 +64,83 @@ class _AnnuityPageState extends State<AnnuityPage> {
         break;
       default:
         ejemplo = '';
+    }
+    setState(() {});
+  }
+
+  void _cargarTeoriaYFormula(String tipo) {
+    switch (tipo) {
+      case 'Valor Futuro':
+        teoriaYFormula = "TEORÍA DE ANUALIDADES\n\n"
+            "DEFINICIÓN:\n"
+            "• Serie de pagos iguales realizados a intervalos iguales\n"
+            "• Los pagos ocurren al final de cada período\n"
+            "• También conocida como anualidad ordinaria o vencida\n\n"
+            "FÓRMULA DEL VALOR FUTURO:\n"
+            "VF = R × [ (1 + i)ⁿ - 1 ] / i\n\n"
+            "Donde:\n"
+            "• VF = Valor Futuro de la anualidad\n"
+            "• R = Cuota periódica (pago)\n"
+            "• i = Tasa de interés por período\n"
+            "• n = Número de períodos";
+        break;
+
+      case 'Valor Presente':
+        teoriaYFormula = "TEORÍA DE ANUALIDADES\n\n"
+            "CARACTERÍSTICAS:\n"
+            "• Pagos constantes y periódicos\n"
+            "• Plazo determinado\n"
+            "• Tasa de interés constante\n"
+            "• Capitalización por período\n\n"
+            "FÓRMULA DEL VALOR PRESENTE:\n"
+            "VP = R × [ 1 - (1 + i)⁻ⁿ ] / i\n\n"
+            "Donde:\n"
+            "• VP = Valor Presente de la anualidad\n"
+            "• R = Cuota periódica (pago)\n"
+            "• i = Tasa de interés por período\n"
+            "• n = Número de períodos";
+        break;
+
+      case 'Cuota periódica (R)':
+        teoriaYFormula = "TEORÍA DE ANUALIDADES\n\n"
+            "APLICACIONES COMUNES:\n"
+            "• Préstamos hipotecarios\n"
+            "• Créditos vehiculares\n"
+            "• Fondos de pensiones\n"
+            "• Planes de ahorro\n\n"
+            "FÓRMULAS PARA LA CUOTA:\n\n"
+            "Desde Valor Futuro:\n"
+            "R = VF × i / [ (1 + i)ⁿ - 1 ]\n\n"
+            "Desde Valor Presente:\n"
+            "R = VP × i / [ 1 - (1 + i)⁻ⁿ ]\n\n"
+            "Donde:\n"
+            "• R = Cuota periódica a calcular\n"
+            "• VF = Valor Futuro conocido\n"
+            "• VP = Valor Presente conocido\n"
+            "• i = Tasa de interés\n"
+            "• n = Número de períodos";
+        break;
+
+      case 'Número de periodos (n)':
+        teoriaYFormula = "TEORÍA DE ANUALIDADES\n\n"
+            "CONSIDERACIONES:\n"
+            "• Tasa y período deben coincidir\n"
+            "• Los pagos son constantes\n"
+            "• Se usa logaritmo natural (ln)\n"
+            "• Resultado puede ser decimal\n\n"
+            "FÓRMULAS PARA EL TIEMPO:\n\n"
+            "Desde Valor Futuro:\n"
+            "n = ln[1 + (VF × i / R)] / ln(1 + i)\n\n"
+            "Desde Valor Presente:\n"
+            "n = ln[R / (R - VP × i)] / ln(1 + i)\n\n"
+            "Donde:\n"
+            "• n = Número de períodos a calcular\n"
+            "• VF = Valor Futuro conocido\n"
+            "• VP = Valor Presente conocido\n"
+            "• R = Cuota periódica\n"
+            "• i = Tasa de interés\n"
+            "• ln = Logaritmo natural";
+        break;
     }
     setState(() {});
   }
@@ -172,31 +253,23 @@ class _AnnuityPageState extends State<AnnuityPage> {
           DropdownButtonFormField<String>(
             value: calcular,
             items: const [
-              DropdownMenuItem(
-                  value: 'Valor Futuro', child: Text('Calcular Valor Futuro')),
-              DropdownMenuItem(
-                  value: 'Valor Presente',
-                  child: Text('Calcular Valor Presente')),
-              DropdownMenuItem(
-                  value: 'Cuota periódica (R)',
-                  child: Text('Despejar cuota periódica (R)')),
-              DropdownMenuItem(
-                  value: 'Número de periodos (n)',
-                  child: Text('Despejar número de periodos (n)')),
+              DropdownMenuItem(value: 'Valor Futuro', child: Text('Calcular Valor Futuro')),
+              DropdownMenuItem(value: 'Valor Presente', child: Text('Calcular Valor Presente')),
+              DropdownMenuItem(value: 'Cuota periódica (R)', child: Text('Despejar cuota periódica (R)')),
+              DropdownMenuItem(value: 'Número de periodos (n)', child: Text('Despejar número de periodos (n)')),
             ],
             onChanged: (v) {
               setState(() {
                 calcular = v ?? 'Valor Futuro';
                 _limpiarCampos();
                 _cargarEjemplo(calcular);
-                if (calcular == 'Cuota periódica (R)' ||
-                    calcular == 'Número de periodos (n)') {
+                _cargarTeoriaYFormula(calcular); // 👉 actualizar teoría y fórmula
+                if (calcular == 'Cuota periódica (R)' || calcular == 'Número de periodos (n)') {
                   computeFrom = 'Desde VF';
                 }
               });
             },
-            decoration:
-                const InputDecoration(labelText: '¿Qué deseas calcular?'),
+            decoration: const InputDecoration(labelText: '¿Qué deseas calcular?'),
           ),
           const SizedBox(height: 20),
 
@@ -208,16 +281,12 @@ class _AnnuityPageState extends State<AnnuityPage> {
             _input(periodosCtrl, 'Número de periodos (n)', hint: 'Ej: 8'),
           ],
 
-          if (calcular == 'Cuota periódica (R)' ||
-              calcular == 'Número de periodos (n)') ...[
+          if (calcular == 'Cuota periódica (R)' || calcular == 'Número de periodos (n)') ...[
             DropdownButtonFormField<String>(
               value: computeFrom,
               items: const [
-                DropdownMenuItem(
-                    value: 'Desde VF', child: Text('Desde VF (Valor Futuro)')),
-                DropdownMenuItem(
-                    value: 'Desde VP',
-                    child: Text('Desde VP (Valor Presente)')),
+                DropdownMenuItem(value: 'Desde VF', child: Text('Desde VF (Valor Futuro)')),
+                DropdownMenuItem(value: 'Desde VP', child: Text('Desde VP (Valor Presente)')),
               ],
               onChanged: (v) {
                 setState(() {
@@ -225,14 +294,11 @@ class _AnnuityPageState extends State<AnnuityPage> {
                   _limpiarCampos();
                 });
               },
-              decoration:
-                  const InputDecoration(labelText: 'Conocer a partir de'),
+              decoration: const InputDecoration(labelText: 'Conocer a partir de'),
             ),
             const SizedBox(height: 12),
-            if (computeFrom == 'Desde VF')
-              _input(vfCtrl, 'Valor Futuro (VF)', hint: 'Ej: 4446200'),
-            if (computeFrom == 'Desde VP')
-              _input(vpCtrl, 'Valor Presente (VP)', hint: 'Ej: 3509850'),
+            if (computeFrom == 'Desde VF') _input(vfCtrl, 'Valor Futuro (VF)', hint: 'Ej: 4446200'),
+            if (computeFrom == 'Desde VP') _input(vpCtrl, 'Valor Presente (VP)', hint: 'Ej: 3509850'),
             const SizedBox(height: 12),
             if (calcular == 'Cuota periódica (R)')
               _input(periodosCtrl, 'Número de periodos (n)', hint: 'Ej: 8'),
@@ -246,8 +312,7 @@ class _AnnuityPageState extends State<AnnuityPage> {
           FilledButton.icon(
             onPressed: _calcular,
             icon: const Icon(Icons.calculate),
-            label: Text("Calcular",
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+            label: Text("Calcular", style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
           ),
 
           const SizedBox(height: 20),
@@ -261,11 +326,28 @@ class _AnnuityPageState extends State<AnnuityPage> {
               child: Text(
                 resultado,
                 style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green.shade900), // ✅ Verde
+                    fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green.shade900), // ✅ Verde
               ),
             ),
+
+          // 🔹 NUEVA SECCIÓN: Teoría y Fórmulas
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.shade200),
+            ),
+            child: Text(
+              teoriaYFormula,
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                color: Colors.orange.shade900,
+                height: 1.4,
+              ),
+            ),
+          ),
 
           const SizedBox(height: 16),
           if (ejemplo.isNotEmpty)

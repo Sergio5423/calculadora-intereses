@@ -22,6 +22,13 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
   String ejemplo =
       'Ejemplo: Si inviertes \$1,000,000 COP al 2% mensual durante 12 meses,\n'
       'el monto futuro será de ≈ \$1,268,241 COP.'; // ejemplo por defecto
+  String teoriaYFormula = ''; // Nueva variable para teoría y fórmulas
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarTeoriaYFormula(calcular); // 👉 teoría y fórmula por defecto
+  }
 
   void _limpiarCampos() {
     capitalCtrl.clear();
@@ -30,6 +37,65 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
     periodosCtrl.clear();
     resultado = '';
     // El ejemplo no se borra, se mantiene por defecto
+  }
+
+  void _cargarTeoriaYFormula(String tipo) {
+    switch (tipo) {
+      case 'Monto Futuro':
+        teoriaYFormula = "TEORÍA DEL INTERÉS COMPUESTO\n\n"
+            "DEFINICIÓN:\n"
+            "• Es la acumulación de intereses que se generan en un período determinado\n"
+            "• Los intereses se capitalizan (se agregan al capital)\n"
+            "• El interés ganado genera más intereses\n\n"
+            "FÓRMULA DEL MONTO COMPUESTO:\n"
+            "MC = C × (1 + i)ⁿ\n\n"
+            "INTERÉS COMPUESTO:\n"
+            "IC = MC - C\n\n"
+            "Donde:\n"
+            "• MC = Monto Compuesto (Valor Futuro)\n"
+            "• C = Capital inicial (Valor Presente)\n"
+            "• i = Tasa de interés por período\n"
+            "• n = Número de períodos\n"
+            "• IC = Interés Compuesto";
+        break;
+
+      case 'Tasa de Interés':
+        teoriaYFormula = "TEORÍA DEL INTERÉS COMPUESTO\n\n"
+            "CARACTERÍSTICAS:\n"
+            "• El capital cambia en cada período\n"
+            "• La tasa se aplica sobre capital diferente\n"
+            "• Los intereses devengan más intereses\n"
+            "• Se capitaliza en períodos regulares\n\n"
+            "FÓRMULA PARA CALCULAR LA TASA:\n"
+            "De: MC = C × (1 + i)ⁿ\n"
+            "Despejando i:\n"
+            "i = (MC / C)^(1/n) - 1\n\n"
+            "Donde:\n"
+            "• i = Tasa de interés por período\n"
+            "• MC = Monto Compuesto\n"
+            "• C = Capital inicial\n"
+            "• n = Número de períodos";
+        break;
+
+      case 'Tiempo':
+        teoriaYFormula = "TEORÍA DEL INTERÉS COMPUESTO\n\n"
+            "CAPITALIZACIÓN:\n"
+            "• Diario, Mensual, Trimestral\n"
+            "• Cuatrimestral, Semestral, Anual\n"
+            "• El interés es 'CAPITALIZABLE'\n"
+            "• El interés gana interés\n\n"
+            "FÓRMULA PARA CALCULAR EL TIEMPO:\n"
+            "De: MC = C × (1 + i)ⁿ\n"
+            "Despejando n:\n"
+            "n = log(MC / C) / log(1 + i)\n\n"
+            "Donde:\n"
+            "• n = Número de períodos\n"
+            "• MC = Monto Compuesto\n"
+            "• C = Capital inicial\n"
+            "• i = Tasa de interés por período\n"
+            "• log = Logaritmo (base 10 o natural)";
+        break;
+    }
   }
 
   /// Convierte la tasa ingresada a la misma unidad de tiempo que `unidadTiempo`
@@ -75,8 +141,7 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
       case 'Monto Futuro':
         if (C <= 0 || iPct <= 0 || n <= 0) {
           setState(() {
-            resultado =
-                "Por favor ingresa Capital, Tasa y Número de periodos válidos.";
+            resultado = "Por favor ingresa Capital, Tasa y Número de periodos válidos.";
           });
           return;
         }
@@ -92,8 +157,7 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
       case 'Tasa de Interés':
         if (C <= 0 || M <= 0 || n <= 0) {
           setState(() {
-            resultado =
-                "Por favor ingresa Capital, Monto Futuro y Número de periodos válidos.";
+            resultado = "Por favor ingresa Capital, Monto Futuro y Número de periodos válidos.";
           });
           return;
         }
@@ -107,8 +171,7 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
       case 'Tiempo':
         if (C <= 0 || iPct <= 0 || M <= 0) {
           setState(() {
-            resultado =
-                "Por favor ingresa Capital, Tasa y Monto Futuro válidos.";
+            resultado = "Por favor ingresa Capital, Tasa y Monto Futuro válidos.";
           });
           return;
         }
@@ -119,13 +182,6 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
         ejemplo =
             'Ejemplo: Si inviertes \$1,000,000 COP al 2% mensual y deseas llegar a \$1,268,241 COP,\n'
             'necesitarás alrededor de 12 meses.';
-        break;
-      case 'Capital':
-        final i = _convertirTasa(iPct, unidadTasa, unidadTiempo);
-        final capital = M / pow((1 + i), n);
-        resultado = 'Capital (C): ${capital.toStringAsFixed(2)} COP';
-        ejemplo = ''
-            '';
         break;
     }
 
@@ -159,16 +215,15 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
               DropdownMenuItem(
                   value: 'Monto Futuro', child: Text('Calcular Monto Futuro')),
               DropdownMenuItem(
-                  value: 'Tasa de Interés',
-                  child: Text('Calcular Tasa de Interés')),
-              DropdownMenuItem(value: 'Tiempo', child: Text('Calcular Tiempo')),
+                  value: 'Tasa de Interés', child: Text('Calcular Tasa de Interés')),
               DropdownMenuItem(
-                  value: 'Capital', child: Text('Calcular Capital')),
+                  value: 'Tiempo', child: Text('Calcular Tiempo')),
             ],
             onChanged: (v) {
               setState(() {
                 calcular = v ?? 'Monto Futuro';
                 _limpiarCampos();
+                _cargarTeoriaYFormula(calcular); // 👉 actualizar teoría y fórmula
                 // actualizar ejemplo según la opción seleccionada
                 switch (calcular) {
                   case 'Monto Futuro':
@@ -189,8 +244,7 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
                 }
               });
             },
-            decoration:
-                const InputDecoration(labelText: '¿Qué deseas calcular?'),
+            decoration: const InputDecoration(labelText: '¿Qué deseas calcular?'),
           ),
           const SizedBox(height: 20),
 
@@ -209,11 +263,6 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
             _input(montoCtrl, 'Monto Futuro (M)'),
           const SizedBox(height: 12),
 
-          if (calcular == 'Capital') const SizedBox(height: 12),
-          _input(montoCtrl, 'Monto Compuesto (MC)'),
-          const SizedBox(height: 12),
-          _input(tasaCtrl, 'Tasa i (%)'),
-          const SizedBox(height: 12),
           if (calcular != 'Tiempo')
             Row(
               children: [
@@ -226,16 +275,12 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
                     value: unidadTiempo,
                     items: const [
                       DropdownMenuItem(value: 'meses', child: Text('Meses')),
-                      DropdownMenuItem(
-                          value: 'trimestres', child: Text('Trimestres')),
-                      DropdownMenuItem(
-                          value: 'semestres', child: Text('Semestres')),
+                      DropdownMenuItem(value: 'trimestres', child: Text('Trimestres')),
+                      DropdownMenuItem(value: 'semestres', child: Text('Semestres')),
                       DropdownMenuItem(value: 'años', child: Text('Años')),
                     ],
-                    onChanged: (v) =>
-                        setState(() => unidadTiempo = v ?? 'meses'),
-                    decoration:
-                        const InputDecoration(labelText: 'Unidad de tiempo'),
+                    onChanged: (v) => setState(() => unidadTiempo = v ?? 'meses'),
+                    decoration: const InputDecoration(labelText: 'Unidad de tiempo'),
                   ),
                 ),
               ],
@@ -248,10 +293,8 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
             value: unidadTasa,
             items: const [
               DropdownMenuItem(value: 'mensual', child: Text('Tasa mensual')),
-              DropdownMenuItem(
-                  value: 'trimestral', child: Text('Tasa trimestral')),
-              DropdownMenuItem(
-                  value: 'semestral', child: Text('Tasa semestral')),
+              DropdownMenuItem(value: 'trimestral', child: Text('Tasa trimestral')),
+              DropdownMenuItem(value: 'semestral', child: Text('Tasa semestral')),
               DropdownMenuItem(value: 'anual', child: Text('Tasa anual')),
             ],
             onChanged: (v) => setState(() => unidadTasa = v ?? 'mensual'),
@@ -283,9 +326,39 @@ class _CompoundInterestPageState extends State<CompoundInterestPage> {
               ),
             ),
 
+          // 🔹 NUEVA SECCIÓN: Teoría y Fórmulas
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.purple.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.purple.shade200),
+            ),
+            child: Text(
+              teoriaYFormula,
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                color: Colors.purple.shade900,
+                height: 1.4,
+              ),
+            ),
+          ),
+
           const SizedBox(height: 16),
           if (ejemplo.isNotEmpty)
-            Text(ejemplo, style: GoogleFonts.poppins(fontSize: 14)),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green.shade200),
+              ),
+              child: Text(
+                ejemplo, 
+                style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87)
+              ),
+            ),
         ],
       ),
     );

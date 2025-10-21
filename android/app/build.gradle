@@ -25,12 +25,9 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.example.auth_2024"
-    compileSdk = 35  // SDK 35
+    compileSdk = 35 
 
-    // Agrega esto para unificar el target JVM
-    kotlin {
-        jvmToolchain(17)
-    }
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -38,11 +35,12 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.auth_2024"
-        minSdkVersion 23  // minSdkVersion configurado a 23
-        targetSdkVersion 35 // ← Actualiza aquí
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
+        applicationId "com.example.auth_2024"
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+ 
     }
 
     buildTypes {
@@ -59,8 +57,11 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"  // Dependencia de Kotlin estándar
     implementation platform('com.google.firebase:firebase-bom:32.0.0')  // Para Firebase (verifica que coincida con tu proyecto)
     implementation 'com.google.firebase:firebase-analytics'  // Firebase Analytics (puedes añadir más dependencias según las necesidades de Firebase)
 }
 
+kotlin {
+    jvmToolchain(17)
+}

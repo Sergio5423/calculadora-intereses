@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+
 import 'interest_page.dart';
 import 'simple_interest_page.dart';
 import 'compound_interest_page.dart';
 import 'annuity_page.dart';
+import 'gradient_page.dart';
+import 'amortization_page.dart';
+import 'capitalization_page.dart';
+import 'tir_page.dart';
 import 'profile_page.dart';
 import 'settings_page.dart';
 
@@ -117,11 +122,11 @@ class _HomePageState extends State<HomePage> {
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: const [
+                    boxShadow: [
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 8,
-                        offset: Offset(0, 4),
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -181,8 +186,7 @@ class _HomePageState extends State<HomePage> {
                 _buildOptionCard(
                   icon: Icons.show_chart,
                   title: "Interés Compuesto",
-                  description:
-                      "Simula el crecimiento del capital con capitalización",
+                  description: "Simula el crecimiento del capital con capitalización",
                   onTap: () {
                     Navigator.push(
                       context,
@@ -205,6 +209,60 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                   color: Colors.purple.shade50,
+                ),
+                
+                // NUEVAS OPCIONES
+                _buildOptionCard(
+                  icon: Icons.trending_up,
+                  title: "Gradientes",
+                  description: "Calcula series variables aritméticas y geométricas",
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const GradientPage()),
+                    );
+                  },
+                  color: Colors.pink.shade50,
+                ),
+                _buildOptionCard(
+                  icon: Icons.pie_chart,
+                  title: "Amortización",
+                  description: "Sistemas Francés, Alemán y Americano",
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AmortizationPage()),
+                    );
+                  },
+                  color: Colors.teal.shade50,
+                ),
+                _buildOptionCard(
+                  icon: Icons.account_balance,
+                  title: "Capitalización",
+                  description: "Capitalización simple y compuesta",
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CapitalizationPage()),
+                    );
+                  },
+                  color: Colors.cyan.shade50,
+                ),
+                _buildOptionCard(
+                  icon: Icons.auto_graph,
+                  title: "Tasa de Retorno",
+                  description: "Calcula la TIR de proyectos de inversión",
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TirPage()),
+                    );
+                  },
+                  color: Colors.red.shade50,
                 ),
               ],
             ),
@@ -248,3 +306,5 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+

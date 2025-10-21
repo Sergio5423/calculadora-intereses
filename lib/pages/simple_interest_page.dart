@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/services.dart';
 
 class SimpleInterestPage extends StatefulWidget {
   const SimpleInterestPage({super.key});
@@ -14,17 +13,18 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
   final tasaCtrl = TextEditingController();
   final montoCtrl = TextEditingController();
   final periodosCtrl = TextEditingController();
-  final interesCtrl = TextEditingController();
 
   String calcular = 'Monto Futuro';
   String unidad = 'meses';
   String resultado = '';
   String ejemplo = '';
+  String teoriaYFormula = ''; // Nueva variable para teoría y fórmulas
 
   @override
   void initState() {
     super.initState();
-    _cargarEjemplo(calcular);
+    _cargarEjemplo(calcular); // 👉 ejemplo por defecto al abrir la página
+    _cargarTeoriaYFormula(calcular); // 👉 teoría y fórmula por defecto
   }
 
   void _cargarEjemplo(String tipo) {
@@ -44,26 +44,71 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
             'Ejemplo: Para que \$1,000,000 COP se conviertan en \$1,120,000 COP\n'
             'a una tasa del 2% mensual, se requieren 6 meses.';
         break;
-      case 'TiempoInteres':
-        ejemplo =
-            'Ejemplo: Un capital de \$70,000 tardará en generar unos intereses de \$105,000\n'
-            'a una tasa del 15% anual, unos 10 años.';
+    }
+  }
+
+  void _cargarTeoriaYFormula(String tipo) {
+    switch (tipo) {
+      case 'Monto Futuro':
+        teoriaYFormula = "TEORÍA DEL INTERÉS SIMPLE\n\n"
+            "• Pago por el uso de dinero prestado\n"
+            "• Se calcula sobre el capital inicial (principal)\n"
+            "• No hay capitalización de intereses\n"
+            "• Los intereses no generan más intereses\n\n"
+            "FÓRMULAS DEL INTERÉS SIMPLE\n\n"
+            "Interés Simple:\n"
+            "I = C × i × t\n\n"
+            "Monto Futuro:\n"
+            "M = C + I\n"
+            "M = C × (1 + i × t)\n\n"
+            "Donde:\n"
+            "• I = Interés Simple\n"
+            "• C = Capital inicial\n"
+            "• i = Tasa de interés por período\n"
+            "• t = Tiempo (en períodos)\n"
+            "• M = Monto Futuro";
         break;
-      case 'CapitalInteresTotal':
-        ejemplo =
-            'Ejemplo: Si necesitas pagar \$500 de interés, a una tasa del 5% y el préstamo\n'
-            'dura 3 años entonces el monto del préstamo es de \$3,333.33 COP.';
+
+      case 'Tasa de Interés':
+        teoriaYFormula = "TEORÍA DEL INTERÉS SIMPLE\n\n"
+            "CARACTERÍSTICAS:\n"
+            "• El interés se calcula siempre sobre el capital original\n"
+            "• La tasa se aplica sobre el mismo capital en cada período\n"
+            "• Los intereses son constantes en cada período\n"
+            "• Fácil de calcular y entender\n\n"
+            "FÓRMULAS PARA CALCULAR LA TASA\n\n"
+            "De: I = C × i × t\n"
+            "Despejando i:\n"
+            "i = I / (C × t)\n\n"
+            "También:\n"
+            "i = (M - C) / (C × t)\n\n"
+            "Donde:\n"
+            "• i = Tasa de interés\n"
+            "• I = Interés total (M - C)\n"
+            "• C = Capital inicial\n"
+            "• M = Monto Futuro\n"
+            "• t = Tiempo en períodos";
         break;
-      case 'CapitalInvertido':
-        ejemplo =
-            'Ejemplo: Para tener un monto final de \$4000 en 3 años a una tasa del 7%\n'
-            'debes invertir \$3,305.79.';
-        break;
-      case 'Interés simple (básico)':
-        ejemplo = 'Ejemplo: P = 6000, r = 4.8% anual, t = 2.5 años\n'
-            'Interés = 6000 × 0.048 × 2.5 = 720\n'
-            'Monto = 6000 + 720 = 6720\n'
-            'Si retiras 3/4 → 5040.';
+
+      case 'Tiempo':
+        teoriaYFormula = "TEORÍA DEL INTERÉS SIMPLE\n\n"
+            "CONVERSIÓN DE TIEMPO:\n"
+            "• 1 año = 12 meses\n"
+            "• 1 año = 360 días (comercial)\n"
+            "• 6 meses = 0.5 años\n"
+            "• 90 días = 90/360 = 0.25 años\n\n"
+            "FÓRMULAS PARA CALCULAR EL TIEMPO\n\n"
+            "De: I = C × i × t\n"
+            "Despejando t:\n"
+            "t = I / (C × i)\n\n"
+            "También:\n"
+            "t = (M - C) / (C × i)\n\n"
+            "Donde:\n"
+            "• t = Tiempo en períodos\n"
+            "• I = Interés total (M - C)\n"
+            "• C = Capital inicial\n"
+            "• M = Monto Futuro\n"
+            "• i = Tasa de interés por período";
         break;
     }
   }
@@ -73,7 +118,6 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
     final iPct = double.tryParse(tasaCtrl.text) ?? 0.0;
     final M = double.tryParse(montoCtrl.text) ?? 0.0;
     final n = double.tryParse(periodosCtrl.text) ?? 0.0;
-    final interes = double.tryParse(interesCtrl.text) ?? 0.0;
 
     final i = iPct / 100;
 
@@ -95,38 +139,11 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
       case 'Tiempo':
         if (C > 0 && i > 0) {
           final tiempo = (M - C) / (C * i);
-          resultado =
-              'Tiempo necesario (n): ${tiempo.toStringAsFixed(2)} $unidad';
-        }
-        break;
-
-      case 'TiempoInteres':
-        final tiempo = interes / (C * i);
-        resultado = 'Tiempo necesario (n): ${tiempo.toStringAsFixed(2)} Años';
-        break;
-
-      case 'CapitalInteresTotal':
-        final capital = interes / (i * n);
-        resultado = 'Monto del préstamo (C): ${capital.toStringAsFixed(2)} COP';
-        break;
-
-      case 'CapitalInvertido':
-        final capital = M / (1 + i * n);
-        resultado = 'Capital necesario (C): ${capital.toStringAsFixed(2)} COP';
-        break;
-
-      case 'Interés simple (básico)':
-        if (C > 0 && i > 0 && n > 0) {
-          final I = C * i * n;
-          final MF = C + I;
-          final retiro = MF * 0.75;
-          resultado = 'Interés generado: \$${I.toStringAsFixed(2)}\n'
-              'Monto acumulado: \$${MF.toStringAsFixed(2)}\n'
-              'Retiro (3/4): \$${retiro.toStringAsFixed(2)}';
+          resultado = 'Tiempo necesario (n): ${tiempo.toStringAsFixed(2)} $unidad';
         }
         break;
     }
-    setState(() {});
+    setState(() {}); // 👉 refresca tanto resultado como ejemplo
   }
 
   Widget _buildCampos() {
@@ -161,46 +178,6 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
             _input(tasaCtrl, 'Tasa i (%) por periodo'),
           ],
         );
-      case 'TiempoInteres':
-        return Column(
-          children: [
-            _input(interesCtrl, 'Interes (I)'),
-            const SizedBox(height: 12),
-            _input(capitalCtrl, 'Capital (C)'),
-            const SizedBox(height: 12),
-            _input(tasaCtrl, 'Tasa i (%) por periodo'),
-          ],
-        );
-      case 'CapitalInteresTotal':
-        return Column(
-          children: [
-            _input(interesCtrl, 'Interes (I)'),
-            const SizedBox(height: 12),
-            _input(tasaCtrl, 'Tasa i (%) por periodo'),
-            const SizedBox(height: 12),
-            _input(periodosCtrl, 'Número de periodos (n)'),
-          ],
-        );
-      case 'CapitalInvertido':
-        return Column(
-          children: [
-            _input(montoCtrl, 'Monto Futuro (M)'),
-            const SizedBox(height: 12),
-            _input(tasaCtrl, 'Tasa i (%) por periodo'),
-            const SizedBox(height: 12),
-            _input(periodosCtrl, 'Número de periodos (n)'),
-          ],
-        );
-      case 'Interés simple (básico)':
-        return Column(
-          children: [
-            _input(capitalCtrl, 'Capital (P)'),
-            const SizedBox(height: 12),
-            _input(tasaCtrl, 'Tasa de interés anual (j%)'),
-            const SizedBox(height: 12),
-            _input(periodosCtrl, 'Tiempo (años)'),
-          ],
-        );
       default:
         return const SizedBox();
     }
@@ -214,14 +191,14 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(',')),
-      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final titleStyle =
+        GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Interés Simple',
@@ -237,46 +214,30 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.green.shade800)),
           const SizedBox(height: 16),
+
           DropdownButtonFormField<String>(
             value: calcular,
             items: const [
-              DropdownMenuItem(
-                  value: 'Monto Futuro',
-                  child: Text('Calcular Monto Futuro o Interés')),
-              DropdownMenuItem(
-                  value: 'Tasa de Interés',
-                  child: Text('Calcular Tasa de Interés')),
-              DropdownMenuItem(
-                  value: 'Tiempo',
-                  child: Text('Calcular Tiempo (Monto Futuro)')),
-              DropdownMenuItem(
-                  value: 'TiempoInteres',
-                  child: Text('Calcular Tiempo (Interes)')),
-              DropdownMenuItem(
-                  value: 'CapitalInteresTotal',
-                  child: Text('Calcular Capital (Interés Total)')),
-              DropdownMenuItem(
-                  value: 'CapitalInvertido',
-                  child: Text('Calcular Capital Invertido (Monto)')),
-              DropdownMenuItem(
-                  value: 'Interés simple (básico)',
-                  child: Text('Cálculo básico de interés simple')),
+              DropdownMenuItem(value: 'Monto Futuro', child: Text('Calcular Monto Futuro')),
+              DropdownMenuItem(value: 'Tasa de Interés', child: Text('Calcular Tasa de Interés')),
+              DropdownMenuItem(value: 'Tiempo', child: Text('Calcular Tiempo')),
             ],
             onChanged: (v) => setState(() {
               calcular = v ?? 'Monto Futuro';
               resultado = '';
-              _cargarEjemplo(calcular);
+              _cargarEjemplo(calcular); // 👉 actualiza el ejemplo automáticamente
+              _cargarTeoriaYFormula(calcular); // 👉 actualiza teoría y fórmula
               capitalCtrl.clear();
               tasaCtrl.clear();
               montoCtrl.clear();
               periodosCtrl.clear();
-              interesCtrl.clear();
             }),
-            decoration:
-                const InputDecoration(labelText: '¿Qué deseas calcular?'),
+            decoration: const InputDecoration(labelText: '¿Qué deseas calcular?'),
           ),
+
           const SizedBox(height: 20),
           _buildCampos(),
+
           const SizedBox(height: 20),
           FilledButton.icon(
             onPressed: _calcular,
@@ -284,6 +245,7 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
             label: Text("Calcular",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
           ),
+
           const SizedBox(height: 20),
           if (resultado.isNotEmpty)
             Container(
@@ -300,6 +262,26 @@ class _SimpleInterestPageState extends State<SimpleInterestPage> {
                     color: Colors.green.shade900),
               ),
             ),
+
+          // 🔹 NUEVA SECCIÓN: Teoría y Fórmulas
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.blue.shade200),
+            ),
+            child: Text(
+              teoriaYFormula,
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                color: Colors.blue.shade900,
+                height: 1.4,
+              ),
+            ),
+          ),
+
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(12),

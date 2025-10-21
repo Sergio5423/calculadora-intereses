@@ -1,3 +1,5 @@
+//interest_page.dart
+
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,22 +14,23 @@ class InterestPage extends StatefulWidget {
 class _InterestPageState extends State<InterestPage> {
   final TextEditingController nominalController = TextEditingController(); // j
   final TextEditingController periodsController = TextEditingController(); // m
-  final TextEditingController periodRateController =
-      TextEditingController(); // i (%)
+  final TextEditingController periodRateController = TextEditingController(); // i (%)
 
   String calcular = "Tasa Efectiva Anual (EA)";
   String resultado = "";
   String ejemplo = "";
+  String teoriaYFormula = ""; // Nueva variable para teoría y fórmulas
 
   // Variables para tabla comparativa
-  double? tasaI;
-  double? tasaJ;
-  double? tasaEA;
+  double? tasaI; // periódica
+  double? tasaJ; // nominal
+  double? tasaEA; // efectiva anual
 
   @override
   void initState() {
     super.initState();
-    _cargarEjemplo(calcular);
+    _cargarEjemplo(calcular); // 🔹 Cargamos ejemplo inicial
+    _cargarTeoriaYFormula(calcular); // 🔹 Cargamos teoría y fórmula inicial
   }
 
   @override
@@ -41,21 +44,24 @@ class _InterestPageState extends State<InterestPage> {
   void _cargarEjemplo(String tipo) {
     switch (tipo) {
       case "Tasa periódica (i)":
-        ejemplo = "Ejemplo:\n"
+        ejemplo =
+            "Ejemplo:\n"
             "j = 24% nominal, m = 12 (mensual)\n"
             "→ i = 2% por mes.\n"
-            "Si inviertes \$1.000.000, en un mes se generan ≈ \$20.000 COP.";
+            "Si inviertes \$1.000.000, en un mes se generan ≈ \$20.000 COP de interés.";
         break;
 
       case "Tasa nominal anual (j)":
-        ejemplo = "Ejemplo:\n"
+        ejemplo =
+            "Ejemplo:\n"
             "i = 2% mensual, m = 12\n"
             "→ j = 24% nominal anual.\n"
-            "Si cada mes ganas 2% sobre \$1.000.000, en 12 meses sumarías ≈ \$240.000 nominales.";
+            "Si cada mes ganas 2% sobre \$1.000.000, en 12 meses sumarías ≈ \$240.000 COP nominales.";
         break;
 
       case "Tasa Efectiva Anual (EA)":
-        ejemplo = "Ejemplo:\n"
+        ejemplo =
+            "Ejemplo:\n"
             "j = 24% nominal, m = 12 (mensual)\n"
             "→ EA ≈ 26.82%.\n"
             "Si inviertes \$1.000.000 durante un año, terminarías con ≈ \$1.268.241 COP.";
@@ -64,11 +70,74 @@ class _InterestPageState extends State<InterestPage> {
     setState(() {});
   }
 
+  void _cargarTeoriaYFormula(String tipo) {
+    switch (tipo) {
+      case "Tasa periódica (i)":
+        teoriaYFormula = "TEORÍA DEL INTERÉS COMPUESTO\n\n"
+            "• El interés compuesto es la acumulación de intereses que se generan en un período determinado\n"
+            "• Los intereses se capitalizan (se agregan al capital)\n"
+            "• El capital cambia en cada período\n"
+            "• Los intereses periódicos son mayores\n\n"
+            "FÓRMULAS DEL INTERÉS COMPUESTO\n\n"
+            "Monto Compuesto:\n"
+            "MC = C × (1 + i)ⁿ\n\n"
+            "Interés Compuesto:\n"
+            "IC = MC - C\n\n"
+            "Donde:\n"
+            "• MC = Monto Compuesto\n"
+            "• C = Capital inicial\n"
+            "• i = Tasa periódica\n"
+            "• n = Número de períodos\n"
+            "• IC = Interés Compuesto";
+        break;
+
+      case "Tasa nominal anual (j)":
+        teoriaYFormula = "TEORÍA DEL INTERÉS COMPUESTO\n\n"
+            "• El interés compuesto es la acumulación de intereses que se generan en un período determinado\n"
+            "• Los intereses se capitalizan (se agregan al capital)\n"
+            "• El capital cambia en cada período\n"
+            "• Los intereses periódicos son mayores\n\n"
+            "FÓRMULAS DEL INTERÉS COMPUESTO\n\n"
+            "Monto Compuesto:\n"
+            "MC = C × (1 + i)ⁿ\n\n"
+            "Interés Compuesto:\n"
+            "IC = MC - C\n\n"
+            "Donde:\n"
+            "• MC = Monto Compuesto\n"
+            "• C = Capital inicial\n"
+            "• i = Tasa periódica\n"
+            "• n = Número de períodos\n"
+            "• IC = Interés Compuesto";
+        break;
+
+      case "Tasa Efectiva Anual (EA)":
+        teoriaYFormula = "TEORÍA DEL INTERÉS COMPUESTO\n\n"
+            "CARACTERÍSTICAS:\n"
+            "• El capital cambia en cada período\n"
+            "• La tasa se aplica sobre capital diferente\n"
+            "• Los intereses devengan más intereses\n"
+            "• Se capitaliza en períodos regulares\n\n"
+            "FÓRMULA PRINCIPAL:\n"
+            "MC = C × (1 + i)ⁿ\n\n"
+            "TASA EFECTIVA ANUAL:\n"
+            "EA = (1 + j/m)ᵐ - 1\n\n"
+            "Donde:\n"
+            "• MC = Monto Compuesto\n"
+            "• C = Capital\n"
+            "• i = Tasa periódica\n"
+            "• n = Períodos\n"
+            "• EA = Tasa Efectiva Anual\n"
+            "• j = Tasa nominal anual\n"
+            "• m = Capitalizaciones por año";
+        break;
+    }
+    setState(() {});
+  }
+
   void _calcular() {
     final j = double.tryParse(nominalController.text.replaceAll(',', '.')) ?? 0;
-    final m = double.tryParse(periodsController.text.replaceAll(',', '.')) ?? 0;
-    final iPct =
-        double.tryParse(periodRateController.text.replaceAll(',', '.')) ?? 0;
+    final m = int.tryParse(periodsController.text) ?? 0;
+    final iPct = double.tryParse(periodRateController.text.replaceAll(',', '.')) ?? 0;
 
     tasaI = null;
     tasaJ = null;
@@ -84,33 +153,42 @@ class _InterestPageState extends State<InterestPage> {
 
     switch (calcular) {
       case "Tasa periódica (i)":
-        if (j > 0 && m > 0) {
+        if (j > 0) {
           final i = j / m;
           tasaI = i;
           tasaJ = j;
           tasaEA = (pow(1 + (j / 100) / m, m) - 1) * 100;
+
           resultado = "Tasa periódica (i): ${i.toStringAsFixed(2)} %";
+        } else {
+          resultado = "Por favor ingresa j y m válidos.";
         }
         break;
 
       case "Tasa nominal anual (j)":
-        if (iPct > 0 && m > 0) {
+        if (iPct > 0) {
           final jCalc = iPct * m;
           tasaI = iPct;
           tasaJ = jCalc;
           tasaEA = (pow(1 + (iPct / 100), m) - 1) * 100;
+
           resultado = "Tasa nominal anual (j): ${jCalc.toStringAsFixed(2)} %";
+        } else {
+          resultado = "Por favor ingresa i y m válidos.";
         }
         break;
 
       case "Tasa Efectiva Anual (EA)":
-        if (j > 0 && m > 0) {
-          final i = (j / 100) / m;
+        if (j > 0) {
+          final i = (j / 100) / m; // en decimal
           final ea = (pow(1 + i, m) - 1) * 100;
           tasaI = j / m;
           tasaJ = j;
           tasaEA = ea.toDouble();
+
           resultado = "Tasa Efectiva Anual (EA): ${ea.toStringAsFixed(2)} %";
+        } else {
+          resultado = "Por favor ingresa j y m válidos.";
         }
         break;
     }
@@ -119,17 +197,15 @@ class _InterestPageState extends State<InterestPage> {
   }
 
   Widget _buildTable() {
-    if (tasaI == null || tasaJ == null || tasaEA == null)
-      return const SizedBox();
+    if (tasaI == null || tasaJ == null || tasaEA == null) return const SizedBox();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Tabla comparativa",
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.green.shade800,
-            )),
+        Text("Tabla comparativa", style: GoogleFonts.poppins(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          color: Colors.green.shade800,
+        )),
         const SizedBox(height: 8),
         Table(
           border: TableBorder.all(color: Colors.green.shade300, width: 1),
@@ -189,6 +265,7 @@ class _InterestPageState extends State<InterestPage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.green.shade800)),
           const SizedBox(height: 16),
+
           DropdownButtonFormField<String>(
             value: calcular,
             items: const [
@@ -209,47 +286,51 @@ class _InterestPageState extends State<InterestPage> {
                 tasaI = null;
                 tasaJ = null;
                 tasaEA = null;
-                _cargarEjemplo(calcular);
+                _cargarEjemplo(calcular); // 🔹 Cambiar ejemplo dinámico
+                _cargarTeoriaYFormula(calcular); // 🔹 Cambiar teoría y fórmula
               });
             },
-            decoration:
-                const InputDecoration(labelText: "¿Qué deseas calcular?"),
+            decoration: const InputDecoration(labelText: "¿Qué deseas calcular?"),
           ),
           const SizedBox(height: 20),
-          TextField(
-            controller: nominalController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: "Tasa nominal anual (j%)",
-              hintText: "Ej: 24",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+
+          // Campos dinámicos según la opción
+          if (calcular == "Tasa periódica (i)" ||
+              calcular == "Tasa Efectiva Anual (EA)") ...[
+            TextField(
+              controller: nominalController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "Tasa nominal anual (j%)",
+                hintText: "Ej: 24",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: periodsController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: "Capitalizaciones por año (m)",
-              hintText: "Ej: 12",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-          if (calcular == "Tasa nominal anual (j)") ...[
             const SizedBox(height: 12),
+          ],
+
+          if (calcular == "Tasa nominal anual (j)")
             TextField(
               controller: periodRateController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: "Tasa periódica (i%)",
                 hintText: "Ej: 2",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
-          ],
+          if (calcular == "Tasa nominal anual (j)") const SizedBox(height: 12),
+
+          TextField(
+            controller: periodsController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: "Capitalizaciones por año (m)",
+              hintText: "Ej: 12 para mensual",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+
           const SizedBox(height: 20),
           FilledButton.icon(
             onPressed: _calcular,
@@ -257,6 +338,7 @@ class _InterestPageState extends State<InterestPage> {
             label: Text("Calcular",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
           ),
+
           const SizedBox(height: 20),
           if (resultado.isNotEmpty)
             Container(
@@ -273,7 +355,28 @@ class _InterestPageState extends State<InterestPage> {
                     color: Colors.green.shade900),
               ),
             ),
+
+          // 🔹 Teoría y Fórmulas SIEMPRE visibles
           const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.purple.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.purple.shade200),
+            ),
+            child: Text(
+              teoriaYFormula,
+              style: GoogleFonts.poppins(
+                fontSize: 13, 
+                color: Colors.purple.shade900,
+                height: 1.4,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+          // 🔹 Ejemplo SIEMPRE visible
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -286,6 +389,7 @@ class _InterestPageState extends State<InterestPage> {
               style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
             ),
           ),
+
           const SizedBox(height: 20),
           _buildTable(),
         ],
