@@ -1,0 +1,2 @@
+C:/Users/starr/Documents/github/calculadora-intereses/android/app/.cxx/RelWithDebInfo/5l2o3w55/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/starr/Documents/github/calculadora-intereses/android/app/.cxx/RelWithDebInfo/5l2o3w55/x86_64/CMakeFiles/rebuild_cache.dir

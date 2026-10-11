@@ -4,11 +4,15 @@ class AuthController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> registerUser({
-    required String id,        // cédula
-    required String name,      // nombre
-    required String email,     // correo
-    required String password,  // contraseña
-    required String pin, required String telefono, required String accountType, required String accountNumber, required int balance,       // PIN de 4 dígitos
+    required String id,
+    required String name,
+    required String email,
+    required String password,
+    required String pin,
+    required String telefono,
+    required String accountType,
+    required String accountNumber,
+    required int balance,
   }) async {
     try {
       // Guardar directamente en Firestore usando la cédula como ID del documento
@@ -20,7 +24,6 @@ class AuthController {
       });
 
       print("✅ Usuario registrado con cédula $id");
-
     } catch (e) {
       throw Exception('Error al registrar el usuario: ${e.toString()}');
     }

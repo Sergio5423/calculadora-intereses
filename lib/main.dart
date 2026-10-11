@@ -3,8 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-// Páginas
 import 'package:auth_2024/pages/login_page.dart';
 import 'package:auth_2024/pages/register_page.dart';
 import 'package:auth_2024/pages/home_page.dart';
@@ -13,7 +11,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
 
-  // Inicializa Firebase dependiendo si es web o no
   if (GetPlatform.isWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -52,10 +49,9 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/login', page: () => LoginPage()),
         GetPage(name: '/register', page: () => RegisterPage()),
-        GetPage(name: '/home', page: () => const HomePage()), // 👈 Ruta agregada
+        GetPage(
+            name: '/home', page: () => const HomePage()), // 👈 Ruta agregada
       ],
     );
   }
 }
-
-
